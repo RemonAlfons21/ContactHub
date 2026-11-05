@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="./assist/fontawesome-free-7.2.0-web/svgs/solid/address-book.svg"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="./assist/fontawesome-free-7.2.0-web/css/all.min.css"
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="./assist/css/bootstrap.min.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./assist/css/style.css" />
+
+    <script>
+      document.documentElement.setAttribute(
+        "data-bs-theme",
+        localStorage.getItem("contacthub-theme") || "light",
+      );
+    </script>
+
+    <title>ContactHub - Smart Contact Manager</title>
+  </head>
+
+  <body class="bg-body-tertiary">
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar bg-body shadow-sm py-3">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center w-100">
+          <!-- Brand -->
+          <div class="d-flex align-items-center gap-3">
+            <div
+              class="bg-primary rounded-3 d-flex justify-content-center align-items-center shadow-sm"
+              style="width: 48px; height: 48px"
+            >
+              <i class="fa-solid fa-address-book fs-5 text-white"></i>
+            </div>
+
+            <div>
+              <h4 class="fw-bolder m-0">
+                Contact<span class="text-primary">Hub</span>
+              </h4>
+              <p class="m-0 text-body-secondary small fw-medium">
+                Smart Contact Manager
+              </p>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="d-flex align-items-center gap-3">
+            <button
+              type="button"
+              id="addContactBtn"
+              class="btn btn-primary fw-semibold px-3 py-2"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+            >
+              <i class="fa-solid fa-plus me-1"></i>
+              Add Contact
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-outline-secondary d-flex justify-content-center align-items-center"
+              aria-label="Notifications"
+            >
+              <i class="fa-solid fa-bell text-body-secondary"></i>
+            </button>
+
+            <button
+              type="button"
+              id="themeToggleBtn"
+              class="btn btn-outline-secondary d-flex justify-content-center align-items-center"
+              aria-label="Switch to dark mode"
+              aria-pressed="false"
+              title="Switch to dark mode"
+            >
+              <i
+                id="themeToggleIcon"
+                class="fa-solid fa-moon"
+                aria-hidden="true"
+              ></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ==================== ADD CONTACT MODAL ==================== -->
+    <div
+      class="modal fade"
+      id="staticBackdrop"
+      data-bs-backdrop="ture"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+          <div class="modal-header px-4 py-3">
+            <div>
+              <h1 class="modal-title fs-5 fw-bolder" id="staticBackdropLabel">
+                Add New Contact
+              </h1>
+              <p class="small text-body-secondary m-0 mt-1">
+                Add the contact details below
+              </p>
+            </div>
+
+            <button
+              onclick="deleteValuesInInputs()"
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="modal-body px-4 py-3">
+            <form id="contactForm">
+              <!-- Full Name -->
+              <div class="mb-3">
+                <label for="fullName" class="form-label fw-semibold">
+                  Full Name <span class="text-danger">*</span>
+                </label>
+                <input
+                  id="fullName"
+                  type="text"
+                  class="form-control bg-body-tertiary py-2"
+                  placeholder="Enter full name"
+                  autocomplete="name"
+                  minlength="2"
+                  maxlength="50"
+                  required
+                />
+              </div>
+
+              <!-- Phone -->
+              <div class="mb-3">
+                <label for="phoneNumber" class="form-label fw-semibold">
+                  Phone Number <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <select
+                    id="countryCode"
+                    class="form-select bg-body-tertiary py-2 flex-grow-0"
+                    aria-label="Phone country"
+                  ></select>
+                  <input
+                    id="phoneNumber"
+                    type="tel"
+                    class="form-control bg-body-tertiary py-2"
+                    placeholder="e.g., 01012345678"
+                    autocomplete="tel-national"
+                    inputmode="tel"
+                    maxlength="30"
+                    required
+                  />
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="mb-3">
+                <label for="emailAddress" class="form-label fw-semibold">
+                  Email Address
+                </label>
+                <input
+                  id="emailAddress"
+                  type="email"
+                  class="form-control bg-body-tertiary py-2"
+                  placeholder="name@example.com"
+                  autocomplete="email"
+                  maxlength="254"
+                />
+              </div>
+
+              <!-- Address -->
+              <div class="mb-3">
+                <label for="address" class="form-label fw-semibold">
+                  Address
+                </label>
+                <input
+                  id="address"
+                  type="text"
+                  class="form-control bg-body-tertiary py-2"
+                  placeholder="Enter address"
+                  autocomplete="street-address"
+                  maxlength="120"
+                />
+              </div>
+
+              <!-- Group -->
+              <div class="mb-3">
+                <label for="group" class="form-label fw-semibold">
+                  Group
+                </label>
+                <select
+                  id="group"
+                  class="form-select bg-body-tertiary py-2"
+                  aria-label="Select a group"
+                >
+                  <option value="" selected>Select a group</option>
+                  <option value="Family">Family</option>
+                  <option value="Friends">Friends</option>
+                  <option value="Work">Work</option>
+                  <option value="School">School</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <!-- Note -->
+              <div class="mb-3">
+                <label for="note" class="form-label fw-semibold"> Note </label>
+                <textarea
+                  class="form-control bg-body-tertiary"
+                  id="note"
+                  rows="3"
+                  placeholder="Add notes about this contact"
+                  maxlength="500"
+                ></textarea>
+              </div>
+
+              <!-- Contact Flags -->
+              <div class="d-flex flex-wrap gap-4 pt-1">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="favorite"
+                  />
+                  <label class="form-check-label fw-medium" for="favorite">
+                    <i class="text-warning fa-solid fa-star me-1"></i>
+                    Favorite
+                  </label>
+                </div>
+
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="emergency"
+                  />
+                  <label class="form-check-label fw-medium" for="emergency">
+                    <i class="text-danger fa-solid fa-heart-pulse me-1"></i>
+                    Emergency
+                  </label>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="modal-footer px-4 py-3">
+            <button
+              onclick="deleteValuesInInputs()"
+              type="button"
+              class="btn btn-light border fw-semibold flex-fill"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              form="contactForm"
+              id="saveContactBtn"
+              class="btn btn-primary fw-semibold flex-fill"
+            >
+              <i class="fa-solid fa-check me-1"></i>
+              <span id="saveContactBtnText">Add Contact</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="container py-5">
+      <!-- Statistics -->
+      <section class="row g-3 mb-4">
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4 d-flex align-items-center gap-3">
+              <div
+                class="bg-primary rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                style="width: 48px; height: 48px"
+              >
+                <i class="fa-solid fa-people-group text-white"></i>
+              </div>
+
+              <div>
+                <p class="text-body-secondary small fw-bold mb-1">TOTAL</p>
+                <h3 class="fw-bolder m-0" id="totalCount">0</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4 d-flex align-items-center gap-3">
+              <div
+                class="bg-warning rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                style="width: 48px; height: 48px"
+              >
+                <i class="fa-solid fa-star text-white"></i>
+              </div>
+
+              <div>
+                <p class="text-body-secondary small fw-bold mb-1">FAVORITES</p>
+                <h3 class="fw-bolder m-0" id="favoriteCount">0</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4 d-flex align-items-center gap-3">
+              <div
+                class="bg-danger rounded-3 d-flex align-items-center justify-content-center shadow-sm"
+                style="width: 48px; height: 48px"
+              >
+                <i class="fa-solid fa-heart-pulse text-white"></i>
+              </div>
+
+              <div>
+                <p class="text-body-secondary small fw-bold mb-1">EMERGENCY</p>
+                <h3 class="fw-bolder m-0" id="emergencyCount">0</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contacts + Sidebar -->
+      <div class="row g-4">
+        <!-- All Contacts -->
+        <section class="col-lg-8">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4">
+              <div
+                class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3"
+              >
+                <div>
+                  <h3 class="fw-bolder m-0">All Contacts</h3>
+                  <p class="text-body-secondary m-0 mt-1">
+                    Manage and organize your
+                    <span id="contactCount">0</span> contacts
+                  </p>
+                </div>
+
+                <div class="position-relative" style="min-width: 260px">
+                  <i
+                    class="fa-solid fa-magnifying-glass position-absolute top-50 start-0 translate-middle-y ms-3 text-body-secondary"
+                  ></i>
+
+                  <input
+                    id="searchInput"
+                    class="form-control ps-5"
+                    type="search"
+                    placeholder="Search contacts..."
+                    aria-label="Search contacts"
+                  />
+                </div>
+              </div>
+
+              <hr class="my-4" />
+
+              <div
+                class="contactsArea row row-cols-1 row-cols-md-2 g-4"
+                id="contactsContainer"
+              >
+                <div class="col-12 text-center text-body-tertiary py-5">
+                  <i class="fa-solid fa-address-book fs-1 mb-3"></i>
+                  <p class="m-0 fw-bolder">No contacts yet.</p>
+                  <p class="m-0 mt-1">Add your first contact to get started.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sidebar -->
+        <aside class="col-lg-4">
+          <!-- Favorites -->
+          <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="card-header border-0 bg-warning-subtle p-3">
+              <div class="d-flex align-items-center gap-2">
+                <div
+                  class="bg-warning rounded-3 d-flex align-items-center justify-content-center"
+                  style="width: 40px; height: 40px"
+                >
+                  <i class="fa-solid fa-star text-white"></i>
+                </div>
+
+                <div>
+                  <h6 class="m-0 fw-bolder">Favorites</h6>
+                  <p class="m-0 small text-body-secondary">
+                    Quick access to starred contacts
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="favoritesContact d-flex flex-column gap-2 p-3"
+              id="favoriteArea"
+            >
+              <div class="text-center text-body-tertiary py-3">
+                <i class="fa-regular fa-star fs-4 mb-2"></i>
+                <p class="m-0 fw-bolder">No favorite contacts yet.</p>
+                <p class="m-0 mt-1 small">Add a contact to your favorites.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Emergency -->
+          <div class="card border-0 shadow-sm rounded-4 overflow-hidden mt-4">
+            <div class="card-header border-0 bg-danger-subtle p-3">
+              <div class="d-flex align-items-center gap-2">
+                <div
+                  class="bg-danger rounded-3 d-flex align-items-center justify-content-center"
+                  style="width: 40px; height: 40px"
+                >
+                  <i class="fa-solid fa-heart-pulse text-white"></i>
+                </div>
+
+                <div>
+                  <h6 class="m-0 fw-bolder">Emergency</h6>
+                  <p class="m-0 small text-body-secondary">
+                    Quick access to emergency contacts
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="favoritesContact d-flex flex-column gap-2 p-3"
+              id="emergencyArea"
+            >
+              <div class="text-center text-body-tertiary py-3">
+                <i class="fa-regular fa-heart fs-4 mb-2"></i>
+                <p class="m-0 fw-bolder">No emergency contacts yet.</p>
+                <p class="m-0 mt-1 small">
+                  Add a contact to your emergency list.
+                </p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/libphonenumber-js@1.11.20/bundle/libphonenumber-js.min.js"></script>
+    <script src="./assist/js/bootstrap.bundle.js"></script>
+    <script src="./assist/js/index.js"></script>
+  </body>
+</html>
